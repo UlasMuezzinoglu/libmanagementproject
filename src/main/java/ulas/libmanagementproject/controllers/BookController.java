@@ -1,5 +1,6 @@
 package ulas.libmanagementproject.controllers;
 
+import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import ulas.libmanagementproject.business.services.BookService;
 import ulas.libmanagementproject.entity.Author;
 import ulas.libmanagementproject.entity.Book;
 import ulas.libmanagementproject.entity.Genre;
+import ulas.libmanagementproject.entity.dtos.BookDto;
 import ulas.libmanagementproject.helpers.IBookSessionHelper;
 import ulas.libmanagementproject.utils.results.DataResult;
 import ulas.libmanagementproject.utils.results.Result;
@@ -23,7 +25,7 @@ public class BookController {
 
     private final BookService bookService;
     private HttpSession session;
-    private IBookSessionHelper bookSessionHelper;
+    private final IBookSessionHelper bookSessionHelper;
 
 
     @Autowired
@@ -41,6 +43,16 @@ public class BookController {
         }
         return ResponseEntity.ok(result);
     }
+    @GetMapping("/getallasdto")
+    public ResponseEntity<DataResult<List<BookDto>>> getAllAsDto(){
+
+        var result = this.bookService.getAllAsDto();
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/getbyid")
     public ResponseEntity<DataResult<Book>> getById(@RequestParam String id){
 
