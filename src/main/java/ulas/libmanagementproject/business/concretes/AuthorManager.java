@@ -7,6 +7,7 @@ import ulas.libmanagementproject.constants.Messages;
 import ulas.libmanagementproject.dataAccess.repositories.AuthorDao;
 import ulas.libmanagementproject.entity.Author;
 import ulas.libmanagementproject.helpers.validationHelpers.authorHelper.AuthorValidator;
+import ulas.libmanagementproject.utils.business.BusinessRules;
 import ulas.libmanagementproject.utils.results.*;
 
 import java.util.List;
@@ -31,6 +32,14 @@ public class AuthorManager implements AuthorService {
 
     @Override
     public Result add(Author author) {
+
+        var result2 = BusinessRules.Run(isOverFlowCount()); // bu mekanizma ile parametre olarak verdiğim her metot(iş kuralı) işlenecek
+        if (result2 != null)                                       //ve 1 tanesi dahi ErrorResult verirse, işleme alınmayacak
+        {
+            return result2;
+        }
+
+
         if (authorValidator.checkFields(author).isSuccess()){
             this.authorDao.save(author);
             return new SuccessResult(Messages.AuthorAdded);
@@ -44,4 +53,17 @@ public class AuthorManager implements AuthorService {
     public DataResult<Author> getById(String id) {
         return new SuccessDataResult<Author>(authorDao.findById(id).get(),Messages.AuthorListed);
     }
+
+
+
+    public Result isOverFlowCount(){
+        var result = authorDao.findAll();
+        if (result.size() < 20){
+            return new SuccessResult();
+
+        }
+        return new ErrorResult("Yazar Sayısı 20 den fazla olamaz !");
+
+    }
+
 }
