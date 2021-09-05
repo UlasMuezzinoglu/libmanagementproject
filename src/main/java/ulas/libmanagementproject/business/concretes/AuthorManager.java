@@ -33,8 +33,13 @@ public class AuthorManager implements AuthorService {
     @Override
     public Result add(Author author) {
 
-        var result2 = BusinessRules.Run(isOverFlowCount()); // bu mekanizma ile parametre olarak verdiğim her metot(iş kuralı) işlenecek
-        if (result2 != null)                                       //ve 1 tanesi dahi ErrorResult verirse, işleme alınmayacak
+        /*
+          bu mekanizma ile parametre olarak verdiğim her metot(iş kuralı) işlenecek
+          ve 1 tanesi dahi ErrorResult verirse, işleme alınmayacak
+        */
+
+        var result2 = BusinessRules.Run(isOverFlowCount(),testBusinessRule(),testBusinessRule2());
+        if (result2 != null)
         {
             return result2;
         }
@@ -64,6 +69,12 @@ public class AuthorManager implements AuthorService {
         }
         return new ErrorResult("Yazar Sayısı 20 den fazla olamaz !");
 
+    }
+    public Result testBusinessRule(){
+        return new SuccessResult();
+    }
+    public Result testBusinessRule2(){
+        return new SuccessResult();
     }
 
 }
