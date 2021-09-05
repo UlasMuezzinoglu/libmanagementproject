@@ -6,23 +6,22 @@ import ulas.libmanagementproject.business.services.GenreService;
 import ulas.libmanagementproject.constants.Messages;
 import ulas.libmanagementproject.dataAccess.repositories.GenreDao;
 import ulas.libmanagementproject.entity.Genre;
-import ulas.libmanagementproject.utils.results.DataResult;
-import ulas.libmanagementproject.utils.results.Result;
-import ulas.libmanagementproject.utils.results.SuccessDataResult;
-import ulas.libmanagementproject.utils.results.SuccessResult;
+import ulas.libmanagementproject.helpers.validationHelpers.genreHelper.GenreValidator;
+import ulas.libmanagementproject.utils.results.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GenreManager implements GenreService {
 
 
     private GenreDao genreDao;
+    private GenreValidator genreValidator;
 
     @Autowired
-    public GenreManager(GenreDao genreDao){
+    public GenreManager(GenreDao genreDao, GenreValidator genreValidator){
         this.genreDao = genreDao;
+        this.genreValidator = genreValidator;
     }
 
 
@@ -33,8 +32,12 @@ public class GenreManager implements GenreService {
 
     @Override
     public Result add(Genre genre) {
-        genreDao.save(genre);
-        return new SuccessResult(Messages.GenreAdded);
+        if (genreValidator.checkFields(genre).isSuccess()){
+            genreDao.save(genre);
+            return new SuccessResult(Messages.GenreAdded);
+        }
+        return new ErrorResult(genreValidator.checkFields(genre).getMessage());
+
     }
 
     @Override

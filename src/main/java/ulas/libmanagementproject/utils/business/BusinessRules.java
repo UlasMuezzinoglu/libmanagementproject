@@ -1,6 +1,5 @@
 package ulas.libmanagementproject.utils.business;
 
-import lombok.var;
 import ulas.libmanagementproject.utils.results.Result;
 
 public class BusinessRules

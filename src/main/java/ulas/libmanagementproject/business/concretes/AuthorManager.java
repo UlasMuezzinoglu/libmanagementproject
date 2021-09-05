@@ -6,22 +6,21 @@ import ulas.libmanagementproject.business.services.AuthorService;
 import ulas.libmanagementproject.constants.Messages;
 import ulas.libmanagementproject.dataAccess.repositories.AuthorDao;
 import ulas.libmanagementproject.entity.Author;
-import ulas.libmanagementproject.utils.results.DataResult;
-import ulas.libmanagementproject.utils.results.Result;
-import ulas.libmanagementproject.utils.results.SuccessDataResult;
-import ulas.libmanagementproject.utils.results.SuccessResult;
+import ulas.libmanagementproject.helpers.validationHelpers.authorHelper.AuthorValidator;
+import ulas.libmanagementproject.utils.results.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AuthorManager implements AuthorService {
 
     private AuthorDao authorDao;
+    private AuthorValidator authorValidator;
 
     @Autowired
-    public AuthorManager(AuthorDao authorDao) {
+    public AuthorManager(AuthorDao authorDao, AuthorValidator authorValidator) {
         this.authorDao = authorDao;
+        this.authorValidator = authorValidator;
     }
 
 
@@ -32,8 +31,13 @@ public class AuthorManager implements AuthorService {
 
     @Override
     public Result add(Author author) {
-        this.authorDao.save(author);
-        return new SuccessResult(Messages.AuthorAdded);
+        if (authorValidator.checkFields(author).isSuccess()){
+            this.authorDao.save(author);
+            return new SuccessResult(Messages.AuthorAdded);
+        }
+        return new ErrorResult(authorValidator.checkFields(author).getMessage());
+
+
     }
 
     @Override

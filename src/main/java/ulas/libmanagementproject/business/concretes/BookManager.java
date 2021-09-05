@@ -1,7 +1,7 @@
 package ulas.libmanagementproject.business.concretes;
 
 
-import lombok.var;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,32 +14,38 @@ import ulas.libmanagementproject.dataAccess.repositories.BookDao;
 import ulas.libmanagementproject.dataAccess.repositories.GenreDao;
 import ulas.libmanagementproject.entity.Book;
 import ulas.libmanagementproject.entity.dtos.BookDto;
+import ulas.libmanagementproject.helpers.validationHelpers.bookHelper.BookValidator;
 import ulas.libmanagementproject.mapper.BookMapper;
-import ulas.libmanagementproject.utils.results.DataResult;
-import ulas.libmanagementproject.utils.results.Result;
-import ulas.libmanagementproject.utils.results.SuccessDataResult;
-import ulas.libmanagementproject.utils.results.SuccessResult;
+import ulas.libmanagementproject.utils.results.*;
 
 import java.util.List;
 
 @Service
 public class BookManager implements BookService {
 
-    private final BookDao bookDao;
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
-    private final BookMapper bookMapper;
-    private final MongoTemplate mongoTemplate;
-
-
     @Autowired
-    public BookManager(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, BookMapper bookMapper, MongoTemplate mongoTemplate) {
-        this.bookDao = bookDao;
-        this.authorDao = authorDao;
-        this.genreDao = genreDao;
-        this.bookMapper = bookMapper;
-        this.mongoTemplate = mongoTemplate;
-    }
+    private BookDao bookDao;
+    @Autowired
+    private AuthorDao authorDao;
+    @Autowired
+    private GenreDao genreDao;
+    @Autowired
+    private BookMapper bookMapper;
+    @Autowired
+    private BookValidator bookValidator;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+
+
+//    public BookManager(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao, BookMapper bookMapper,BookValidator bookValidator, MongoTemplate mongoTemplate) {
+//        this.bookDao = bookDao;
+//        this.authorDao = authorDao;
+//        this.genreDao = genreDao;
+//        this.bookMapper = bookMapper;
+//        this.bookValidator = bookValidator;
+//        this.mongoTemplate = mongoTemplate;
+//    }
 
 
     @Override
@@ -58,12 +64,16 @@ public class BookManager implements BookService {
     public Result add(Book book) {
         var author = this.authorDao.findById(book.getAuthor().getId());
         var genre = this.genreDao.findById(book.getGenre().getId());
-
-
+        //
         book.getAuthor().setName(author.get().getName());
         book.getGenre().setName(genre.get().getName());
-        bookDao.save(book);
-        return new SuccessResult(Messages.BookAdded);
+        //
+        if (bookValidator.checkFields(book).isSuccess()){
+            bookDao.save(book);
+            return new SuccessResult(Messages.BookAdded);
+        }
+        return new ErrorResult(bookValidator.checkFields(book).getMessage());
+
     }
 
     @Override
