@@ -15,8 +15,8 @@ import java.util.List;
 @Service
 public class AuthorManager implements AuthorService {
 
-    private AuthorDao authorDao;
-    private AuthorValidator authorValidator;
+    private final AuthorDao authorDao;
+    private final AuthorValidator authorValidator;
 
     @Autowired
     public AuthorManager(AuthorDao authorDao, AuthorValidator authorValidator) {
@@ -47,6 +47,7 @@ public class AuthorManager implements AuthorService {
 
         if (authorValidator.checkFields(author).isSuccess()){
             this.authorDao.save(author);
+
             return new SuccessResult(Messages.AuthorAdded);
         }
         return new ErrorResult(authorValidator.checkFields(author).getMessage());
