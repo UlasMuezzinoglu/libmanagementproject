@@ -22,6 +22,9 @@ public interface BookService {
     DataResult<List<Book>> getByAuthorName(String name);
     DataResult<List<Book>> getByGenreName(String name);
 
+    //
+    DataResult<List<Book>> search(String search);
+
 
 }
 

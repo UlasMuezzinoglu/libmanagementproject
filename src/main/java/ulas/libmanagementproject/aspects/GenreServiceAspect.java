@@ -1,5 +1,6 @@
 package ulas.libmanagementproject.aspects;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,9 +15,10 @@ public class GenreServiceAspect {
 
 
     @Before("execution(* ulas.libmanagementproject.business.concretes.GenreManager.add(..))")
-    public void testAddMethodBefore(JoinPoint joinPoint){
+    public void testAddMethodBefore(JoinPoint joinPoint) {
         var genre = (Genre)joinPoint.getArgs()[0];
         System.out.println("Add Metotundan önce çalıştı !" +" " + genre.getName());
+
         // return "Metotu Çalıştırma !"; malesef henüz bu işe yaramadı :(
     }
     @After("execution(* ulas.libmanagementproject.business.concretes.GenreManager.add(..))")

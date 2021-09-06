@@ -106,11 +106,21 @@ public class BookManager implements BookService {
         return new SuccessDataResult<>(mongoTemplate.find(query, Book.class));
     }
 
+    @Override
+    public DataResult<List<Book>> search(String search) {
+        Query query = new Query(new Criteria()
+                .orOperator(
+                Criteria.where("name").regex(search),
+                Criteria.where("author.name").regex(search),
+                Criteria.where("genre.name").regex(search)
+                ));
 
 
 
 
 
+        return new SuccessDataResult<>(mongoTemplate.find(query, Book.class));
+    }
 
 
 }

@@ -182,6 +182,17 @@ public class BookController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
+    @GetMapping("/books/{search}/search")
+    public ResponseEntity<DataResult<List<Book>>> search(@PathVariable("search") String search){
+
+        var result = this.bookService.search(search);
+
+        if (result.getData().size() == 0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+        return ResponseEntity.ok(result);
+
+    }
 
 
 
