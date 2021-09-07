@@ -32,7 +32,7 @@ public class Book {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
 
-    @TextIndexed(weight = 5)
+    @TextIndexed(weight = 4)
     private String name;
 
     private int pages;
