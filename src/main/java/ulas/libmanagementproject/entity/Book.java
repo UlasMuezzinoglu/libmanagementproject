@@ -8,7 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 @Data
 @Document(collection = "books")
@@ -25,11 +27,24 @@ public class Book {
     }
 
 
+
     @Id
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String id;
+
+
     private String name;
+
     private int pages;
+
+    @TextIndexed(weight = 6)
     private Author author;
+
+    @TextIndexed(weight = 2)
     private  Genre genre;
+
+    @JsonIgnore
+    @TextScore
+    private Float score;
+
 }
