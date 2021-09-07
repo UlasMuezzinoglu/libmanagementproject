@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.TextCriteria;
+import org.springframework.data.mongodb.core.query.TextQuery;
 import org.springframework.stereotype.Service;
 import ulas.libmanagementproject.business.services.BookService;
 import ulas.libmanagementproject.constants.Messages;
@@ -19,6 +21,7 @@ import ulas.libmanagementproject.mapper.BookMapper;
 import ulas.libmanagementproject.utils.results.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class BookManager implements BookService {
@@ -108,15 +111,19 @@ public class BookManager implements BookService {
 
     @Override
     public DataResult<List<Book>> search(String search) {
-        Query query = new Query(new Criteria()
+
+       /* Query query = new Query(new Criteria()
                 .orOperator(
-                Criteria.where("name").regex(search),
-                Criteria.where("author.name").regex(search),
-                Criteria.where("genre.name").regex(search)
-                ));
+                        Criteria.where("name").regex(search),
+                        Criteria.where("author.name").regex(search),
+                        Criteria.where("genre.name").regex(search)
+                )
+        );*/
+       TextCriteria criteria = TextCriteria
+                .forDefaultLanguage()
+                .matchingPhrase(search);
 
-
-
+        Query query = TextQuery.queryText(criteria).sortByScore();
 
 
         return new SuccessDataResult<>(mongoTemplate.find(query, Book.class));
