@@ -1,9 +1,10 @@
-package ulas.libmanagementproject.business.concretes;
+package ulas.libmanagementproject.business.concretes.Business;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import ulas.libmanagementproject.business.concretes.GenreManager;
 import ulas.libmanagementproject.business.services.GenreService;
 import ulas.libmanagementproject.constants.Messages;
 import ulas.libmanagementproject.dataAccess.repositories.AuthorDao;
