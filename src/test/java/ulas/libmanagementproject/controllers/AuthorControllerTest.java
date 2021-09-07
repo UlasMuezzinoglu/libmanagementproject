@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ulas.libmanagementproject.business.services.AuthorService;
 import ulas.libmanagementproject.constants.Messages;
+import ulas.libmanagementproject.controllers.abstracts.AuthorControllerInterface;
 import ulas.libmanagementproject.entity.Author;
 import ulas.libmanagementproject.utils.results.DataResult;
 import ulas.libmanagementproject.utils.results.Result;
@@ -20,7 +21,7 @@ import static org.junit.Assert.*;
 
 public class AuthorControllerTest {
 
-    private AuthorController authorController;
+    private AuthorControllerInterface authorController;
 
     private AuthorService authorService;
 
@@ -45,11 +46,11 @@ public class AuthorControllerTest {
         Mockito.when(authorService.add(author)).thenReturn(resultForService);
 
 
-        var result = authorController.add(author);
+        var resultx = authorController.add(author);
 
         ResponseEntity<Result> expected = ResponseEntity.ok(resultForService);
 
-        Assert.assertEquals(expected,result);
+        Assert.assertEquals(expected,resultx);
 
 
 
@@ -57,13 +58,4 @@ public class AuthorControllerTest {
 
     }
 
-    @Test
-    public void whenGetAll_itShouldReturnResponseEntity(){
-        //var resultForService = authorController.getAll(); //burada author controller patlattı. daha fazla bakamıcam daha sornra zaman ayırıp bakıcam
-
-        var expected = new SuccessDataResult<List<Author>>(Messages.AuthorsListed);
-
-
-        Assert.assertEquals(expected,expected); //böyle sistemi susturdum, ilgilenicem
-    }
 }
